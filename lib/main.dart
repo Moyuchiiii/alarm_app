@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:alarm_app/settings_screen.dart';
+import 'package:alarm_app/help_screen.dart';
+import 'package:alarm_app/timer_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,14 +50,74 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(
-          _currentTime,
-          style: const TextStyle(
-            fontSize: 50, // サイズを大きく設定
-            fontFamily: 'Y-RabbitFont', // カスタムフォントを適用
+      body: Stack(
+        children: [
+          Center(
+            child: Text(
+              _currentTime,
+              style: const TextStyle(
+                fontSize: 50, // サイズを大きく設定
+                fontFamily: 'Y-RabbitFont', // カスタムフォントを適用
+              ),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 20,
+            left: 20, // 左下に配置
+            child: IconButton(
+              onPressed: () {},
+              tooltip: 'アラーム',
+              icon: const Icon(Icons.alarm),
+              iconSize: 40, // サイズを調整
+            ),
+          ),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    );
+                  },
+                  tooltip: '設定',
+                  icon: const Icon(Icons.settings),
+                  iconSize: 30, // サイズを調整
+                ),
+                const SizedBox(height: 10),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HelpScreen()),
+                    );
+                  },
+                  tooltip: 'ヘルプ',
+                  icon: const Icon(Icons.help),
+                  iconSize: 30, // サイズを調整
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TimerScreen()),
+                );
+              },
+              tooltip: 'タイマー',
+              icon: const Icon(Icons.timer),
+              iconSize: 40, // サイズを調整
+            ),
+          ),
+        ],
       ),
     );
   }
