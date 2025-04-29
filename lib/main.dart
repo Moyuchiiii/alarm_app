@@ -39,20 +39,21 @@ class _HomePageState extends State<HomePage> {
 
   void _updateTime() {
     setState(() {
-      _currentTime = DateTime.now().toString();
+      final now = DateTime.now();
+      _currentTime = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alarm App'),
-      ),
       body: Center(
         child: Text(
           _currentTime,
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(
+            fontSize: 50, // サイズを大きく設定
+            fontFamily: 'Y-RabbitFont', // カスタムフォントを適用
+          ),
         ),
       ),
     );
