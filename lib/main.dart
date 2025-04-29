@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alarm_app/settings_screen.dart';
 import 'package:alarm_app/help_screen.dart';
 import 'package:alarm_app/timer_screen.dart';
+import 'package:alarm_app/alarm_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -65,7 +66,12 @@ class _HomePageState extends State<HomePage> {
             bottom: 20,
             left: 20, // 左下に配置
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AlarmScreen()),
+                );
+              },
               tooltip: 'アラーム',
               icon: const Icon(Icons.alarm),
               iconSize: 40, // サイズを調整
