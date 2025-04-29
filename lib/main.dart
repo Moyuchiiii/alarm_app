@@ -18,6 +18,9 @@ class MyApp extends StatelessWidget {
       title: 'Alarm App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryTextTheme: TextTheme(
+          titleLarge: TextStyle(color: Colors.white),
+        ),
       ),
       home: const HomePage(),
     );
@@ -33,6 +36,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _currentTime = '';
+  Color _clockColor = Colors.white; // デフォルトの文字色を白に設定
 
   @override
   void initState() {
@@ -51,14 +55,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // 背景色を黒に固定
       body: Stack(
         children: [
           Center(
             child: Text(
               _currentTime,
-              style: const TextStyle(
-                fontSize: 50, // サイズを大きく設定
-                fontFamily: 'Y-RabbitFont', // カスタムフォントを適用
+              style: TextStyle(
+                fontSize: 50,
+                fontFamily: 'Y-RabbitFont',
+                color: _clockColor, // 文字色を変数から設定
               ),
             ),
           ),
@@ -73,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               tooltip: 'アラーム',
-              icon: const Icon(Icons.alarm),
+              icon: Icon(Icons.alarm, color: _clockColor),
               iconSize: 40, // サイズを調整
             ),
           ),
@@ -86,11 +92,20 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => SettingsScreen(
+                          currentClockColor: _clockColor,
+                          onClockColorChanged: (Color newColor) {
+                            setState(() {
+                              _clockColor = newColor;
+                            });
+                          },
+                        ),
+                      ),
                     );
                   },
                   tooltip: '設定',
-                  icon: const Icon(Icons.settings),
+                  icon: Icon(Icons.settings, color: _clockColor), // アイコンの色を動的に設定
                   iconSize: 30, // サイズを調整
                 ),
                 const SizedBox(height: 10),
@@ -102,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   tooltip: 'ヘルプ',
-                  icon: const Icon(Icons.help),
+                  icon: Icon(Icons.help, color: _clockColor), // アイコンの色を動的に設定
                   iconSize: 30, // サイズを調整
                 ),
               ],
@@ -119,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               tooltip: 'タイマー',
-              icon: const Icon(Icons.timer),
+              icon: Icon(Icons.timer, color: _clockColor),
               iconSize: 40, // サイズを調整
             ),
           ),

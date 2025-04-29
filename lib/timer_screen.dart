@@ -5,9 +5,13 @@ class TimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color appColor = Theme.of(context).primaryTextTheme.titleLarge?.color ?? Colors.white;
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('タイマー'),
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: appColor),
+        title: Text('タイマー', style: TextStyle(color: appColor)),
       ),
       body: const Center(
         child: Text('タイマー画面'),
