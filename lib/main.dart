@@ -1,9 +1,13 @@
+// このファイルはアプリのエントリーポイントです。
+// アプリ全体の構成や主要な画面遷移を管理します。
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:alarm_app/settings_screen.dart';
 import 'package:alarm_app/help_screen.dart';
 import 'package:alarm_app/timer_screen.dart';
 import 'package:alarm_app/alarm_screen.dart';
+import 'package:alarm_app/database_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +22,9 @@ class MyApp extends StatelessWidget {
       title: 'Alarm App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryTextTheme: TextTheme(
+          titleLarge: TextStyle(color: Colors.white),
+        ),
       ),
       home: const HomePage(),
     );
@@ -33,14 +40,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _currentTime = '';
+  Color _clockColor = Colors.white; // デフォルトの文字色を白に設定
 
   @override
   void initState() {
     super.initState();
+    _loadClockColor();
     _updateTime();
     Timer.periodic(const Duration(seconds: 1), (Timer timer) => _updateTime());
   }
 
+  // データベースから時計の色を読み込む非同期メソッド
+  // 引数: なし
+  // 返り値: Future<void> - 非同期処理の完了を示すFuture
+  Future<void> _loadClockColor() async {
+    final color = await DatabaseHelper.instance.getClockColor();
+    setState(() {
+      _clockColor = color;
+    });
+  }
+
+  // 現在時刻を更新するためのメソッド
+  // 引数: なし
+  // 返り値: なし
   void _updateTime() {
     setState(() {
       final now = DateTime.now();
@@ -48,17 +70,20 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // ホーム画面のUIを構築するメソッド
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // 背景色を黒に固定
       body: Stack(
         children: [
           Center(
             child: Text(
               _currentTime,
-              style: const TextStyle(
-                fontSize: 50, // サイズを大きく設定
-                fontFamily: 'Y-RabbitFont', // カスタムフォントを適用
+              style: TextStyle(
+                fontSize: 50,
+                fontFamily: 'Y-RabbitFont',
+                color: _clockColor, // 文字色を変数から設定
               ),
             ),
           ),
@@ -73,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               tooltip: 'アラーム',
-              icon: const Icon(Icons.alarm),
+              icon: Icon(Icons.alarm, color: _clockColor),
               iconSize: 40, // サイズを調整
             ),
           ),
@@ -86,11 +111,21 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => SettingsScreen(
+                          currentClockColor: _clockColor,
+                          onClockColorChanged: (Color newColor) async {
+                            await DatabaseHelper.instance.saveClockColor(newColor);
+                            setState(() {
+                              _clockColor = newColor;
+                            });
+                          },
+                        ),
+                      ),
                     );
                   },
                   tooltip: '設定',
-                  icon: const Icon(Icons.settings),
+                  icon: Icon(Icons.settings, color: _clockColor), // アイコンの色を動的に設定
                   iconSize: 30, // サイズを調整
                 ),
                 const SizedBox(height: 10),
@@ -102,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   tooltip: 'ヘルプ',
-                  icon: const Icon(Icons.help),
+                  icon: Icon(Icons.help, color: _clockColor), // アイコンの色を動的に設定
                   iconSize: 30, // サイズを調整
                 ),
               ],
@@ -119,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               tooltip: 'タイマー',
-              icon: const Icon(Icons.timer),
+              icon: Icon(Icons.timer, color: _clockColor),
               iconSize: 40, // サイズを調整
             ),
           ),
