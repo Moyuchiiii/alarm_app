@@ -15,6 +15,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  late Color _selectedColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedColor = widget.currentClockColor;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +46,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('白', style: TextStyle(color: Colors.white)),
             trailing: Radio<Color>(
               value: Colors.white,
-              groupValue: widget.currentClockColor,
+              groupValue: _selectedColor,
               onChanged: (Color? value) {
-                if (value != null) widget.onClockColorChanged(value);
+                if (value != null) {
+                  setState(() {
+                    _selectedColor = value;
+                    widget.onClockColorChanged(value);
+                  });
+                }
               },
             ),
           ),
           ListTile(
             title: const Text('ピンク', style: TextStyle(color: Color(0xFFFFD1DC))),
             trailing: Radio<Color>(
-              value: Color(0xFFFFD1DC),
-              groupValue: widget.currentClockColor,
+              value: const Color(0xFFFFD1DC),
+              groupValue: _selectedColor,
               onChanged: (Color? value) {
-                if (value != null) widget.onClockColorChanged(value);
+                if (value != null) {
+                  setState(() {
+                    _selectedColor = value;
+                    widget.onClockColorChanged(value);
+                  });
+                }
               },
             ),
           ),
@@ -58,9 +76,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('青', style: TextStyle(color: Colors.blue)),
             trailing: Radio<Color>(
               value: Colors.blue,
-              groupValue: widget.currentClockColor,
+              groupValue: _selectedColor,
               onChanged: (Color? value) {
-                if (value != null) widget.onClockColorChanged(value);
+                if (value != null) {
+                  setState(() {
+                    _selectedColor = value;
+                    widget.onClockColorChanged(value);
+                  });
+                }
               },
             ),
           ),
