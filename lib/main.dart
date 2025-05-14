@@ -1,9 +1,13 @@
+// このファイルはアプリのエントリーポイントです。
+// アプリ全体の構成や主要な画面遷移を管理します。
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:alarm_app/settings_screen.dart';
 import 'package:alarm_app/help_screen.dart';
 import 'package:alarm_app/timer_screen.dart';
 import 'package:alarm_app/alarm_screen.dart';
+import 'package:alarm_app/database_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,10 +45,24 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _loadClockColor();
     _updateTime();
     Timer.periodic(const Duration(seconds: 1), (Timer timer) => _updateTime());
   }
 
+  // データベースから時計の色を読み込む非同期メソッド
+  // 引数: なし
+  // 返り値: Future<void> - 非同期処理の完了を示すFuture
+  Future<void> _loadClockColor() async {
+    final color = await DatabaseHelper.instance.getClockColor();
+    setState(() {
+      _clockColor = color;
+    });
+  }
+
+  // 現在時刻を更新するためのメソッド
+  // 引数: なし
+  // 返り値: なし
   void _updateTime() {
     setState(() {
       final now = DateTime.now();
@@ -52,6 +70,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // ホーム画面のUIを構築するメソッド
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                         builder: (context) => SettingsScreen(
                           currentClockColor: _clockColor,
-                          onClockColorChanged: (Color newColor) {
+                          onClockColorChanged: (Color newColor) async {
+                            await DatabaseHelper.instance.saveClockColor(newColor);
                             setState(() {
                               _clockColor = newColor;
                             });

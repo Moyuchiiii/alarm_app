@@ -1,3 +1,6 @@
+// このファイルは設定画面のUIとロジックを管理します。
+// ユーザーが時計の色を変更できる機能を提供します。
+
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,8 +26,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _selectedColor = widget.currentClockColor;
   }
 
+  /// 設定画面のUIを構築するメソッド
+  /// 引数: [context] - ウィジェットツリーの現在のビルドコンテキスト
+  /// 返り値: Widget - 設定画面のUIを表すウィジェット
   @override
   Widget build(BuildContext context) {
+    // ユーザーが選択した色を保存するためのロジック
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
